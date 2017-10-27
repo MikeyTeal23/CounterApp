@@ -8,7 +8,8 @@ namespace CounterApp
     {
         static void Main(string[] args)
         {
-            Counter<Box<Apple>> appleCounter= new Counter<Box<Apple>>();
+            Counter<Apple> applesOnlyCounter = new Counter<Apple>();
+            Counter<Box<Apple>> appleCounter = new Counter<Box<Apple>>();
             Counter<Cart> cartCounter = new Counter<Cart>();
             Counter<ICountable> everythingCounter = new Counter<ICountable>();
 
@@ -19,7 +20,7 @@ namespace CounterApp
 
             for (int i = 0; i < 3; i++)
             {
-                appleBox.ItemsInBox.Add(new Apple());
+                appleBox.ItemsInBox.Add(new Apple(Colour.Red));
                 bananaBox.ItemsInBox.Add(new Banana());
             }
 
@@ -37,13 +38,42 @@ namespace CounterApp
             everythingCounter.Add(appleBox);
 
             Console.WriteLine("Number of apples");
-            Console.WriteLine(appleCounter.Count());
+            Console.WriteLine(appleCounter.Count(CountItem));
 
             Console.WriteLine("Number of things in one cart");
-            Console.WriteLine(cartCounter.Count());
+            Console.WriteLine(cartCounter.Count(CountItem));
 
             Console.WriteLine("Number of all things");
-            Console.WriteLine(everythingCounter.Count());
+            Console.WriteLine(everythingCounter.Count(CountItem));
+
+            for (int i = 0; i < 3; i++)
+            {
+                applesOnlyCounter.Add(new Apple(Colour.Red));
+                applesOnlyCounter.Add(new Apple(Colour.Green));
+            }
+            applesOnlyCounter.Add(new Apple(Colour.Green));
+            applesOnlyCounter.Add(new Apple(Colour.Green));
+
+            Console.WriteLine("Number of apples");
+            Console.WriteLine(applesOnlyCounter.Count(CountItem));
+            Console.WriteLine("Number of red apples");
+            Console.WriteLine(applesOnlyCounter.Count(CountRedApples));
+        }
+
+        static int CountItem(int total, ICountable item)
+        {
+            total += item.Count();
+            return total;
+        }
+
+        static int CountRedApples(int total, Apple apple)
+        {
+            if (apple.Colour == Colour.Red)
+            {
+                total += apple.Count();
+            }
+            return total;
         }
     }
 }
+

@@ -16,12 +16,14 @@ namespace CounterApp.Models
             List.Add(item);
         }
 
-        public int Count()
+        public delegate int ProcessItem(int total, T item);
+
+        public int Count(ProcessItem processItem)
         {
-            int total = 0;
+            var total = 0;
             foreach (var item in List)
             {
-                total += item.Count();
+                total = processItem(total, item);
             }
             return total;
         }
